@@ -1,0 +1,12 @@
+[submodule "backend"]
+    path = backend
+    url = git@github.com:Universally-University/backend.git
+[submodule "room_booking"]
+    path = room_booking
+    url = git@github.com:Universally-University/room_booking.git
+[submodule "doctors_booking"]
+    path = doctors_booking
+    url = git@github.com:Universally-University/doctors_booking.git
+[submodule "members_card"]
+    path = members_card
+    url = git@github.com:Universally-University/members_card.git
