@@ -2,29 +2,63 @@
 version: "3"
 services:      
   microservice1:
-    container_name: ${WSB_1_CONTAINER_NAME}
-    image: nginx
-    # build: ./
-    environment:
-      - SERVICE_PORT=${SERVICE_PORT}
-  microservice2:
-    container_name: ${LSP_2_CONTAINER_NAME}
-    image: nginx
-    # build: ./
-    environment:
-      - SERVICE_PORT=${SERVICE_PORT}
-  microservice3:
     container_name: ${ESP_4_CONTAINER_NAME}
-    image: nginx
-    # build: ./
+    build: ${ESP_4_CONTAINER_NAME}
+      # context: ${ESP_4_CONTAINER_NAME}
+      # dockerfile: members_card/Dockerfile
+    volumes:
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/static:/home/www-data/app/static:ro
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/api:/home/www-data/app/api:ro
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/frontend:/home/www-data/app/frontend:ro
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}:/home/www-data/app/${ESP_4_CONTAINER_NAME}:ro
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/templates:/home/www-data/app/templates:ro
     environment:
+      - NAME=${ESP_4_PRETTY_NAME} # Pretty Name
+      - APPNAME=${ESP_4_CONTAINER_NAME}
       - SERVICE_PORT=${SERVICE_PORT}
-
+    ports:
+      - "8001:80"
+    restart: unless-stopped
+  microservice2:
+    container_name: ${WSB_1_CONTAINER_NAME}
+    build:
+      context: ./${WSB_1_CONTAINER_NAME}
+    volumes:
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/static:/home/www-data/app/static:ro
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/api:/home/www-data/app/api:ro
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/frontend:/home/www-data/app/frontend:ro
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}:/home/www-data/app/${WSB_1_CONTAINER_NAME}:ro
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/templates:/home/www-data/app/templates:ro
+    environment:
+      - NAME=${WSB_1_PRETTY_NAME} # Pretty Name
+      - APPNAME=${WSB_1_CONTAINER_NAME} 
+      - SERVICE_PORT=${SERVICE_PORT}
+    # ports:
+    #   - "8002:80"
+    restart: unless-stopped
+  microservice3:
+    container_name: ${LSP_2_CONTAINER_NAME}
+    build:
+      context: ./${LSP_2_CONTAINER_NAME}
+    volumes:
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/static:/home/www-data/app/static:ro
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/api:/home/www-data/app/api:ro
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/frontend:/home/www-data/app/frontend:ro
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}:/home/www-data/app/${LSP_2_CONTAINER_NAME}:ro
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/templates:/home/www-data/app/templates:ro
+      - ./${LSP_2_CONTAINER_NAME}/gunicorn:/etc/gunicorn:ro
+    environment:
+      - NAME=${LSP_2_PRETTY_NAME} # Pretty Name
+      - APPNAME=${LSP_2_CONTAINER_NAME} 
+      - SERVICE_PORT=${SERVICE_PORT}
+    # ports:
+    #   - "8003:80"
+    restart: unless-stopped
   nginx:
     container_name: gateway
     image: nginx:latest
     ports:
-      - "8000:80"
+      - "80:80"
     volumes:
       - ./nginx.conf:/etc/nginx/templates/default.conf.template
       - ./static:/var/www/static:ro
@@ -33,5 +67,5 @@ services:
       - LSP_2_CONTAINER_NAME=${LSP_2_CONTAINER_NAME}
       - ESP_4_CONTAINER_NAME=${ESP_4_CONTAINER_NAME}
       - SERVICE_PORT=${SERVICE_PORT}
+      - SECRET_KEY=${SECRET_KEY}
     restart: on-failure
-
