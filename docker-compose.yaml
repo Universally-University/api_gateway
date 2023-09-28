@@ -1,0 +1,37 @@
+# Compose file made under the assumption that all service is running in the same network and expose the same port number
+version: "3"
+services:      
+  microservice1:
+    container_name: ${WSB_1_CONTAINER_NAME}
+    image: nginx
+    # build: ./
+    environment:
+      - SERVICE_PORT=${SERVICE_PORT}
+  microservice2:
+    container_name: ${LSP_2_CONTAINER_NAME}
+    image: nginx
+    # build: ./
+    environment:
+      - SERVICE_PORT=${SERVICE_PORT}
+  microservice3:
+    container_name: ${ESP_4_CONTAINER_NAME}
+    image: nginx
+    # build: ./
+    environment:
+      - SERVICE_PORT=${SERVICE_PORT}
+
+  nginx:
+    container_name: gateway
+    image: nginx:latest
+    ports:
+      - "8000:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/templates/default.conf.template
+      - ./static:/var/www/static:ro
+    environment:
+      - WSB_1_CONTAINER_NAME=${WSB_1_CONTAINER_NAME}
+      - LSP_2_CONTAINER_NAME=${LSP_2_CONTAINER_NAME}
+      - ESP_4_CONTAINER_NAME=${ESP_4_CONTAINER_NAME}
+      - SERVICE_PORT=${SERVICE_PORT}
+    restart: on-failure
+
