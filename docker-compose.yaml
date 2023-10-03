@@ -16,9 +16,9 @@ services:
       - NAME=${ESP_4_PRETTY_NAME} # Pretty Name
       - APPNAME=${ESP_4_CONTAINER_NAME}
       - SERVICE_PORT=${SERVICE_PORT}
-    ports:
-      - "8001:80"
-    restart: unless-stopped
+    # ports:
+    #   - "8001:80"
+    restart: on-failure
   microservice2:
     container_name: ${WSB_1_CONTAINER_NAME}
     build:
@@ -35,7 +35,7 @@ services:
       - SERVICE_PORT=${SERVICE_PORT}
     # ports:
     #   - "8002:80"
-    restart: unless-stopped
+    restart: on-failure
   microservice3:
     container_name: ${LSP_2_CONTAINER_NAME}
     build:
@@ -53,7 +53,7 @@ services:
       - SERVICE_PORT=${SERVICE_PORT}
     # ports:
     #   - "8003:80"
-    restart: unless-stopped
+    restart: on-failure
   nginx:
     container_name: gateway
     image: nginx:latest
