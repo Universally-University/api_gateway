@@ -7,11 +7,11 @@ services:
       # context: ${ESP_4_CONTAINER_NAME}
       # dockerfile: members_card/Dockerfile
     volumes:
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/static:/home/www-data/app/static:ro
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/api:/home/www-data/app/api:ro
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/frontend:/home/www-data/app/frontend:ro
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}:/home/www-data/app/${ESP_4_CONTAINER_NAME}:ro
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/templates:/home/www-data/app/templates:ro
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/static:/home/www-data/app/static
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/api:/home/www-data/app/api
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/frontend:/home/www-data/app/frontend
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}:/home/www-data/app/${ESP_4_CONTAINER_NAME}
+      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/templates:/home/www-data/app/templates
     environment:
       - NAME=${ESP_4_PRETTY_NAME} # Pretty Name
       - APPNAME=${ESP_4_CONTAINER_NAME}
@@ -24,11 +24,11 @@ services:
     build:
       context: ./${WSB_1_CONTAINER_NAME}
     volumes:
-      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/static:/home/www-data/app/static:ro
-      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/api:/home/www-data/app/api:ro
-      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/frontend:/home/www-data/app/frontend:ro
-      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}:/home/www-data/app/${WSB_1_CONTAINER_NAME}:ro
-      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/templates:/home/www-data/app/templates:ro
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/static:/home/www-data/app/static
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/api:/home/www-data/app/api
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/frontend:/home/www-data/app/frontend
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}:/home/www-data/app/${WSB_1_CONTAINER_NAME}
+      - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/templates:/home/www-data/app/templates
     environment:
       - NAME=${WSB_1_PRETTY_NAME} # Pretty Name
       - APPNAME=${WSB_1_CONTAINER_NAME} 
@@ -41,12 +41,12 @@ services:
     build:
       context: ./${LSP_2_CONTAINER_NAME}
     volumes:
-      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/static:/home/www-data/app/static:ro
-      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/api:/home/www-data/app/api:ro
-      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/frontend:/home/www-data/app/frontend:ro
-      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}:/home/www-data/app/${LSP_2_CONTAINER_NAME}:ro
-      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/templates:/home/www-data/app/templates:ro
-      - ./${LSP_2_CONTAINER_NAME}/gunicorn:/etc/gunicorn:ro
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/static:/home/www-data/app/static
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/api:/home/www-data/app/api
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/frontend:/home/www-data/app/frontend
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}:/home/www-data/app/${LSP_2_CONTAINER_NAME}
+      - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/templates:/home/www-data/app/templates
+      - ./${LSP_2_CONTAINER_NAME}/gunicorn:/etc/gunicorn
     environment:
       - NAME=${LSP_2_PRETTY_NAME} # Pretty Name
       - APPNAME=${LSP_2_CONTAINER_NAME} 
@@ -54,14 +54,43 @@ services:
     # ports:
     #   - "8003:80"
     restart: on-failure
-  nginx:
+  microservice4:
+    container_name: accounts
+    build:
+      context: ./backend
+    # volumes:
+    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/static:/home/www-data/app/static
+    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/api:/home/www-data/app/api
+    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/frontend:/home/www-data/app/frontend
+    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}:/home/www-data/app/${LSP_2_CONTAINER_NAME}
+    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/templates:/home/www-data/app/templates
+    #   - ./${LSP_2_CONTAINER_NAME}/gunicorn:/etc/gunicorn
+    environment:
+      - NAME='UniService' # Pretty Name
+      - APPNAME=UniService # Django project name. The folder name that contains the wsgi.py file.
+      # - DESC=
+      - PROJECTPATH=/home/www-data/app
+      # - PYTHONPATH=/home/www-data/app/.venv/bin # Path to python install.
+      # - CONFFILE=/etc/gunicorn/gunicorn.conf.py # Path to gunicorn configuration file.
+      # - GUNICORN_BIND='["unix:/tmp/gunicorn.sock"]' # Bind address for Gunicorn. *NOTE* change the nginx.conf file to match. 
+      - PIDFILE=/tmp/gunicorn.pid
+      - DB_NAME=serviceuni
+      - DB_USER=bzkojk518zum5f8jygp3
+      - DB_PASSWORD=pscale_pw_HIUHrXiLwZcWugN1NRIOu3wXjVjNUw8vp2iI10wQXRP
+      - DB_HOST=aws.connect.psdb.cloud
+      - DB_PORT=3306
+      - MYSQL_ATTR_SSL_CA=/etc/ssl/certs/ca-certificates.crt
+    # ports:
+    #   - "8003:80"
+    restart: on-failure
+  gateway:
     container_name: gateway
     image: nginx:latest
     ports:
-      - "80:80"
+      - 80:80
     volumes:
       - ./nginx.conf:/etc/nginx/templates/default.conf.template
-      - ./static:/var/www/static:ro
+      - ./static:/var/www/static
     environment:
       - WSB_1_CONTAINER_NAME=${WSB_1_CONTAINER_NAME}
       - LSP_2_CONTAINER_NAME=${LSP_2_CONTAINER_NAME}
