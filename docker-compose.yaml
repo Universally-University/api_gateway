@@ -58,25 +58,22 @@ services:
     container_name: accounts
     build:
       context: ./backend
-    # volumes:
-    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/static:/home/www-data/app/static
-    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/api:/home/www-data/app/api
-    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/frontend:/home/www-data/app/frontend
-    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}:/home/www-data/app/${LSP_2_CONTAINER_NAME}
-    #   - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/templates:/home/www-data/app/templates
-    #   - ./${LSP_2_CONTAINER_NAME}/gunicorn:/etc/gunicorn
+    volumes:
+      - ./backend/UniService/static:/home/www-data/app/static
+      - ./backend/UniService/api:/home/www-data/app/api
+      - ./backend/UniService/frontend:/home/www-data/app/frontend
+      - ./backend/UniService/accounts:/home/www-data/app/accounts
+      - ./backend/UniService/UniService:/home/www-data/app/UniService
+      - ./backend/UniService/templates:/home/www-data/app/templates
+      - ./backend/gunicorn:/etc/gunicorn
     environment:
-      - NAME='UniService' # Pretty Name
-      - APPNAME=UniService # Django project name. The folder name that contains the wsgi.py file.
-      # - DESC=
+      - NAME='UniService'
+      - APPNAME=UniService
       - PROJECTPATH=/home/www-data/app
-      # - PYTHONPATH=/home/www-data/app/.venv/bin # Path to python install.
-      # - CONFFILE=/etc/gunicorn/gunicorn.conf.py # Path to gunicorn configuration file.
-      # - GUNICORN_BIND='["unix:/tmp/gunicorn.sock"]' # Bind address for Gunicorn. *NOTE* change the nginx.conf file to match. 
       - PIDFILE=/tmp/gunicorn.pid
       - DB_NAME=serviceuni
-      - DB_USER=bzkojk518zum5f8jygp3
-      - DB_PASSWORD=pscale_pw_HIUHrXiLwZcWugN1NRIOu3wXjVjNUw8vp2iI10wQXRP
+      - DB_USER=aiarbtoewwhmx6ry8utq
+      - DB_PASSWORD=pscale_pw_58MY0lArRQLNgJJHbLsaD0TXD3HyiuoVKWyNkttAqS3
       - DB_HOST=aws.connect.psdb.cloud
       - DB_PORT=3306
       - MYSQL_ATTR_SSL_CA=/etc/ssl/certs/ca-certificates.crt
