@@ -1,24 +1,6 @@
 # Compose file made under the assumption that all service is running in the same network and expose the same port number
 version: "3"
 services:      
-  microservice1:
-    container_name: ${ESP_4_CONTAINER_NAME}
-    build: ${ESP_4_CONTAINER_NAME}
-      # context: ${ESP_4_CONTAINER_NAME}
-      # dockerfile: members_card/Dockerfile
-    volumes:
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/static:/home/www-data/app/static
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/api:/home/www-data/app/api
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/frontend:/home/www-data/app/frontend
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}:/home/www-data/app/${ESP_4_CONTAINER_NAME}
-      - ./${ESP_4_CONTAINER_NAME}/${ESP_4_CONTAINER_NAME}/templates:/home/www-data/app/templates
-    environment:
-      - NAME=${ESP_4_PRETTY_NAME} # Pretty Name
-      - APPNAME=${ESP_4_CONTAINER_NAME}
-      - SERVICE_PORT=${SERVICE_PORT}
-    # ports:
-    #   - "8001:80"
-    restart: on-failure
   microservice2:
     container_name: ${WSB_1_CONTAINER_NAME}
     build:
@@ -30,11 +12,11 @@ services:
       - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}:/home/www-data/app/${WSB_1_CONTAINER_NAME}
       - ./${WSB_1_CONTAINER_NAME}/${WSB_1_CONTAINER_NAME}/templates:/home/www-data/app/templates
     environment:
-      - NAME=${WSB_1_PRETTY_NAME} # Pretty Name
+      - NAME=${WSB_1_PRETTY_NAME}
       - APPNAME=${WSB_1_CONTAINER_NAME} 
       - SERVICE_PORT=${SERVICE_PORT}
-    # ports:
-    #   - "8002:80"
+    ports:
+      - 8002:80
     restart: on-failure
   microservice3:
     container_name: ${LSP_2_CONTAINER_NAME}
@@ -48,14 +30,14 @@ services:
       - ./${LSP_2_CONTAINER_NAME}/${LSP_2_CONTAINER_NAME}/templates:/home/www-data/app/templates
       - ./${LSP_2_CONTAINER_NAME}/gunicorn:/etc/gunicorn
     environment:
-      - NAME=${LSP_2_PRETTY_NAME} # Pretty Name
+      - NAME=${LSP_2_PRETTY_NAME}
       - APPNAME=${LSP_2_CONTAINER_NAME} 
       - SERVICE_PORT=${SERVICE_PORT}
     # ports:
-    #   - "8003:80"
+    #   - 8003:80
     restart: on-failure
-  microservice4:
-    container_name: accounts
+  microservice1:
+    container_name: enroll
     build:
       context: ./backend
     volumes:
@@ -72,13 +54,13 @@ services:
       - PROJECTPATH=/home/www-data/app
       - PIDFILE=/tmp/gunicorn.pid
       - DB_NAME=serviceuni
-      - DB_USER=aiarbtoewwhmx6ry8utq
-      - DB_PASSWORD=pscale_pw_58MY0lArRQLNgJJHbLsaD0TXD3HyiuoVKWyNkttAqS3
+      - DB_USER=${DB_USER}
+      - DB_PASSWORD=${DB_PASSWORD}
       - DB_HOST=aws.connect.psdb.cloud
       - DB_PORT=3306
-      - MYSQL_ATTR_SSL_CA=/etc/ssl/certs/ca-certificates.crt
-    # ports:
-    #   - "8003:80"
+      - MYSQL_ATTR_SSL_CA=${MYSQL_ATTR_SSL_CA}
+    ports:
+      - 8001:80
     restart: on-failure
   gateway:
     container_name: gateway
