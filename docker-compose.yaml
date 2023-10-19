@@ -15,8 +15,8 @@ services:
       - NAME=${WSB_1_PRETTY_NAME}
       - APPNAME=${WSB_1_CONTAINER_NAME} 
       - SERVICE_PORT=${SERVICE_PORT}
-    ports:
-      - 8002:80
+    depends_on:
+      - gateway
     restart: on-failure
   microservice3:
     container_name: ${LSP_2_CONTAINER_NAME}
@@ -33,8 +33,8 @@ services:
       - NAME=${LSP_2_PRETTY_NAME}
       - APPNAME=${LSP_2_CONTAINER_NAME} 
       - SERVICE_PORT=${SERVICE_PORT}
-    # ports:
-    #   - 8003:80
+    depends_on:
+      - gateway
     restart: on-failure
   microservice1:
     container_name: enroll
@@ -59,8 +59,8 @@ services:
       - DB_HOST=aws.connect.psdb.cloud
       - DB_PORT=3306
       - MYSQL_ATTR_SSL_CA=${MYSQL_ATTR_SSL_CA}
-    ports:
-      - 8001:80
+    depends_on:
+      - gateway
     restart: on-failure
   gateway:
     container_name: gateway
